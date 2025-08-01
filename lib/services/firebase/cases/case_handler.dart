@@ -1,87 +1,72 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-import '../base_firebase_handler.dart';
-import '../../../constants/firebase_collections.dart';
+import '../../network/network_service.dart';
+import '../../../constants/services/firebase_collections.dart';
 
-class CaseHandler extends BaseFirebaseHandler {
+class CaseHandler {
+  final NetworkService _networkService;
+
+  CaseHandler(this._networkService);
+
   // Create a new case
-  Future<void> createCase({
+  Future<NetworkResponse<String>> createCase({
     required String caseId,
     required String title,
     required String status, // e.g., CaseStatuses.pending
     required List<String> parties,
   }) async {
-    try {
-      await firestore.collection(FirestoreCollections.cases).doc(caseId).set({
-        'caseId': caseId,
-        'title': title,
-        'status': status,
-        'parties': parties,
-        'dateFiled': FieldValue.serverTimestamp(),
-      });
-    } catch (e) {
-      throw Exception('Error creating case: ${handleError(e)}');
-    }
+    final data = {
+      'caseId': caseId,
+      'title': title,
+      'status': status,
+      'parties': parties,
+      'dateFiled': FieldValue.serverTimestamp(),
+    };
+    return _networkService.createDocument(
+      FirestoreCollections.cases,
+      caseId,
+      data,
+    );
   }
 
   // Read a single case
-  Future<Map<String, dynamic>?> getCase(String caseId) async {
-    try {
-      DocumentSnapshot doc =
-          await firestore
-              .collection(FirestoreCollections.cases)
-              .doc(caseId)
-              .get();
-      return doc.data() as Map<String, dynamic>?;
-    } catch (e) {
-      throw Exception('Error fetching case: ${handleError(e)}');
-    }
+  Future<NetworkResponse<Map<String, dynamic>>> getCase(String caseId) async {
+    return _networkService.getDocument(
+      FirestoreCollections.cases,
+      caseId,
+      (data) => data,
+    );
   }
 
   // Read all cases
-  Future<List<Map<String, dynamic>>> getAllCases() async {
-    try {
-      QuerySnapshot query =
-          await firestore.collection(FirestoreCollections.cases).get();
-      return query.docs
-          .map((doc) => doc.data() as Map<String, dynamic>)
-          .toList();
-    } catch (e) {
-      throw Exception('Error fetching cases: ${handleError(e)}');
-    }
+  Future<NetworkResponse<List<Map<String, dynamic>>>> getAllCases() async {
+    return _networkService.getCollection(
+      FirestoreCollections.cases,
+      (data) => data,
+    );
   }
 
   // Update case
-  Future<void> updateCase(
+  Future<NetworkResponse<void>> updateCase(
     String caseId, {
     String? title,
     String? status,
     List<String>? parties,
   }) async {
-    try {
-      Map<String, dynamic> updates = {};
-      if (title != null) updates['title'] = title;
-      if (status != null) updates['status'] = status;
-      if (parties != null) updates['parties'] = parties;
-      updates['lastUpdated'] = FieldValue.serverTimestamp();
-      await firestore
-          .collection(FirestoreCollections.cases)
-          .doc(caseId)
-          .update(updates);
-    } catch (e) {
-      throw Exception('Error updating case: ${handleError(e)}');
-    }
+    Map<String, dynamic> updates = {};
+    if (title != null) updates['title'] = title;
+    if (status != null) updates['status'] = status;
+    if (parties != null) updates['parties'] = parties;
+    updates['lastUpdated'] = FieldValue.serverTimestamp();
+    return _networkService.updateDocument(
+      FirestoreCollections.cases,
+      caseId,
+      updates,
+    );
   }
 
   // Delete case
-  Future<void> deleteCase(String caseId) async {
-    try {
-      await firestore
-          .collection(FirestoreCollections.cases)
-          .doc(caseId)
-          .delete();
-    } catch (e) {
-      throw Exception('Error deleting case: ${handleError(e)}');
-    }
+  Future<NetworkResponse<void>> deleteCase(String caseId) async {
+    return _networkService.deleteDocument(FirestoreCollections.cases, caseId);
   }
 }

@@ -1,8 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-import '../../constants/user_account_status.dart';
-import '../../constants/firebase_collections.dart';
+import '../../constants/services/user_account_status.dart';
+import '../../constants/services/firebase_collections.dart';
 
 class FirebaseAuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;

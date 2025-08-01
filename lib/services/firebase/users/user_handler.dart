@@ -1,105 +1,115 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import '../../../constants/services/user_account_status.dart';
+import '../../network/network_service.dart';
+import '../../../constants/services/firebase_collections.dart';
 
-import '../../../constants/user_account_status.dart';
-import '../base_firebase_handler.dart';
-import '../../../constants/firebase_collections.dart';
+class UserHandler {
+  final NetworkService _networkService;
 
-class UserHandler extends BaseFirebaseHandler {
+  UserHandler(this._networkService);
+
   // Sign up with email, password, and additional user details
-  Future<User?> signUp({
+  Future<NetworkResponse<User>> signUp({
     required String email,
     required String password,
     required String fullName,
     required String role, // e.g., UserRoles.judge
   }) async {
     try {
-      UserCredential userCredential = await auth.createUserWithEmailAndPassword(
+      final response = await _networkService.signUp(
         email: email,
         password: password,
+        fullName: fullName,
       );
-      User? user = userCredential.user;
-      if (user != null) {
-        // Update user profile
-        await user.updateDisplayName(fullName);
+      if (response.state == ApiState.success && response.data != null) {
         // Store user data in Firestore
-        await firestore
-            .collection(FirestoreCollections.users)
-            .doc(user.uid)
-            .set({
-              'email': email,
-              'fullName': fullName,
-              'role': role,
-              'accountStatus': UserAccountStatuses.active,
-              'createdAt': FieldValue.serverTimestamp(),
-            });
-        // Note: Set custom claims for role via Firebase Admin SDK on backend
+        final userData = {
+          'email': email,
+          'fullName': fullName,
+          'role': role,
+          'accountStatus': UserAccountStatuses.active,
+          'createdAt': FieldValue.serverTimestamp(),
+        };
+        final storeResponse = await _networkService.createDocument(
+          FirestoreCollections.users,
+          response.data!.uid,
+          userData,
+        );
+        if (storeResponse.state == ApiState.success) {
+          return response;
+        }
+        return NetworkResponse.error(
+          storeResponse.error ?? 'Failed to store user data',
+          storeResponse.statusCode,
+        );
       }
-      return user;
+      return response;
     } catch (e) {
-      throw Exception('Sign-up error: ${handleError(e)}');
+      return NetworkResponse.error('Sign-up error: $e', 500);
     }
   }
 
   // Sign in with email and password
-  Future<User?> signIn({
+  Future<NetworkResponse<User>> signIn({
     required String email,
     required String password,
   }) async {
-    try {
-      UserCredential userCredential = await auth.signInWithEmailAndPassword(
-        email: email,
-        password: password,
-      );
-      return userCredential.user;
-    } catch (e) {
-      throw Exception('Sign-in error: ${handleError(e)}');
-    }
+    return _networkService.signIn(email: email, password: password);
   }
 
   // Read user data
-  Future<Map<String, dynamic>?> getUser(String uid) async {
-    try {
-      DocumentSnapshot doc =
-          await firestore.collection(FirestoreCollections.users).doc(uid).get();
-      return doc.data() as Map<String, dynamic>?;
-    } catch (e) {
-      throw Exception('Error fetching user: ${handleError(e)}');
-    }
+  Future<NetworkResponse<Map<String, dynamic>>> getUser(String uid) async {
+    return _networkService.getDocument(
+      FirestoreCollections.users,
+      uid,
+      (data) => data,
+    );
   }
 
   // Update user data
-  Future<void> updateUser(
+  Future<NetworkResponse<void>> updateUser(
     String uid, {
     String? fullName,
     String? role,
     String? accountStatus,
   }) async {
-    try {
-      Map<String, dynamic> updates = {};
-      if (fullName != null) updates['fullName'] = fullName;
-      if (role != null) updates['role'] = role;
-      if (accountStatus != null) updates['accountStatus'] = accountStatus;
-      updates['lastUpdated'] = FieldValue.serverTimestamp();
-      await firestore
-          .collection(FirestoreCollections.users)
-          .doc(uid)
-          .update(updates);
-      if (fullName != null) {
-        await auth.currentUser?.updateDisplayName(fullName);
-      }
-    } catch (e) {
-      throw Exception('Error updating user: ${handleError(e)}');
+    Map<String, dynamic> updates = {};
+    if (fullName != null) updates['fullName'] = fullName;
+    if (role != null) updates['role'] = role;
+    if (accountStatus != null) updates['accountStatus'] = accountStatus;
+    updates['lastUpdated'] = FieldValue.serverTimestamp();
+    final response = await _networkService.updateDocument(
+      FirestoreCollections.users,
+      uid,
+      updates,
+    );
+    if (response.state == ApiState.success && fullName != null) {
+      await _networkService.auth.currentUser?.updateDisplayName(fullName);
     }
+    return response;
   }
 
   // Delete user
-  Future<void> deleteUser(String uid) async {
+  Future<NetworkResponse<void>> deleteUser(String uid) async {
+    final response = await _networkService.deleteDocument(
+      FirestoreCollections.users,
+      uid,
+    );
+    if (response.state == ApiState.success) {
+      await _networkService.auth.currentUser
+          ?.delete(); // Requires re-authentication
+    }
+    return response;
+  }
+
+  // Sign out
+  Future<NetworkResponse<void>> signOut() async {
     try {
-      await firestore.collection(FirestoreCollections.users).doc(uid).delete();
-      await auth.currentUser?.delete(); // Note: Requires re-authentication
+      await _networkService.signOut();
+      return NetworkResponse.success(null, statusCode: 200);
     } catch (e) {
-      throw Exception('Error deleting user: ${handleError(e)}');
+      return NetworkResponse.error('Sign-out error: $e', 500);
     }
   }
 }
