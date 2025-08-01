@@ -22,27 +22,25 @@ class CustomForm extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return CustomContainer(
-      child: Form(
-        key: formKey,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            ...fields,
-            SizedBox(height: AppSpacingValues.mediumMargin),
-            ElevatedButton(
-              onPressed: onSubmit,
-              style: ElevatedButton.styleFrom(
-                backgroundColor: AppColors.primaryColor,
-                padding: EdgeInsets.all(AppSpacingValues.buttonPadding),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8),
-                ),
+    return Form(
+      key: formKey,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          ...fields,
+          SizedBox(height: AppSpacingValues.mediumMargin),
+          ElevatedButton(
+            onPressed: onSubmit,
+            style: ElevatedButton.styleFrom(
+              backgroundColor: AppColors.primaryColor,
+              padding: EdgeInsets.all(AppSpacingValues.buttonPadding),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(8),
               ),
-              child: Text(submitButtonText, style: AppTextStyles.buttonText),
             ),
-          ],
-        ),
+            child: Text(submitButtonText, style: AppTextStyles.buttonText),
+          ),
+        ],
       ),
     );
   }
@@ -69,7 +67,11 @@ class CustomTextField extends StatelessWidget {
       child: TextFormField(
         controller: controller,
         obscureText: obscureText,
-        decoration: AppDecorations.inputDecoration,
+        decoration: AppDecorations.inputDecoration.copyWith(
+          hintText: 'Enter $label here',
+          hintStyle: AppTextStyles.caption,
+          label: Text(label, style: AppTextStyles.caption),
+        ),
         style: AppTextStyles.bodyText,
         validator: validator,
       ),

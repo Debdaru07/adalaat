@@ -36,6 +36,7 @@ class AdalatAI extends StatelessWidget {
       child: MaterialApp.router(
         title: 'Adalat AI',
         routerConfig: AppRouter.routing,
+        debugShowCheckedModeBanner: false,
         theme: ThemeData(
           primaryColor: AppColors.primaryColor, // Navy Blue (#1A3C6D)
           scaffoldBackgroundColor:

@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
+import '../../constants/services/app_route.dart';
 import '../../constants/services/user_role.dart';
 import '../../providers/auth_provider.dart';
 import '../../widgets/form_widgets.dart';
 import '../../widgets/layout_widgets.dart';
 import '../../widgets/loading_overlay.dart';
+import '../../widgets/navigation_widgets.dart';
 
 class SignupScreen extends StatefulWidget {
   const SignupScreen({super.key});
@@ -33,9 +36,14 @@ class _SignupScreenState extends State<SignupScreen> {
   Widget build(BuildContext context) {
     final authProvider = context.watch<AuthProviderVM>();
     return Scaffold(
+      drawer: NavigationSidebar(
+        selectedRoute: AppRouteConstants.login,
+        onRouteSelected: (route) => GoRouter.of(context).go(route),
+      ),
       body: LoadingOverlay(
         isLoading: authProvider.isLoading,
         child: CustomContainer(
+          decoration: null,
           child: CustomForm(
             formKey: _formKey,
             fields: [

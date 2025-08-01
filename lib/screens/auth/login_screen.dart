@@ -8,6 +8,7 @@ import '../../providers/auth_provider.dart';
 import '../../widgets/form_widgets.dart';
 import '../../widgets/layout_widgets.dart';
 import '../../widgets/loading_overlay.dart';
+import '../../widgets/navigation_widgets.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -32,6 +33,10 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget build(BuildContext context) {
     final authProvider = context.watch<AuthProviderVM>();
     return Scaffold(
+      drawer: NavigationSidebar(
+        selectedRoute: AppRouteConstants.login,
+        onRouteSelected: (route) => GoRouter.of(context).go(route),
+      ),
       body: LoadingOverlay(
         isLoading: authProvider.isLoading,
         child: CustomContainer(

@@ -1,16 +1,15 @@
 import 'package:adalat/constants/frontend_components/spacing_values.dart';
 import 'package:adalat/constants/services/app_route.dart';
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 
 import '../constants/frontend_components/color_palette.dart';
 import '../constants/frontend_components/text_styles.dart';
 
-class NavigationDrawer extends StatelessWidget {
+class NavigationSidebar extends StatelessWidget {
   final String selectedRoute;
   final Function(String) onRouteSelected;
 
-  const NavigationDrawer({
+  const NavigationSidebar({
     super.key,
     required this.selectedRoute,
     required this.onRouteSelected,
@@ -20,26 +19,34 @@ class NavigationDrawer extends StatelessWidget {
   Widget build(BuildContext context) {
     return Drawer(
       child: ListView(
-        padding: EdgeInsets.all(AppSpacingValues.screenPadding),
+        padding: EdgeInsets.zero,
         children: [
+          DrawerHeader(
+            decoration: BoxDecoration(color: AppColors.primaryColor),
+            child: Text(
+              'Adalat AI',
+              style: AppTextStyles.headline2.copyWith(color: Colors.white),
+            ),
+          ),
           ListTile(
             title: Text('Dashboard', style: AppTextStyles.bodyText),
             selected: selectedRoute == AppRouteConstants.dashboard,
-            selectedTileColor: AppColors.primaryColor.withOpacity(0.1),
             onTap: () => onRouteSelected(AppRouteConstants.dashboard),
           ),
           ListTile(
             title: Text('Cases', style: AppTextStyles.bodyText),
             selected: selectedRoute == AppRouteConstants.cases,
-            selectedTileColor: AppColors.primaryColor.withOpacity(0.1),
             onTap: () => onRouteSelected(AppRouteConstants.cases),
           ),
           ListTile(
-            title: Text('Logout', style: AppTextStyles.bodyText),
-            onTap: () {
-              // Implement logout with UserHandler
-              GoRouter.of(context).go(AppRouteConstants.login);
-            },
+            title: Text('Login', style: AppTextStyles.bodyText),
+            selected: selectedRoute == AppRouteConstants.login,
+            onTap: () => onRouteSelected(AppRouteConstants.login),
+          ),
+          ListTile(
+            title: Text('Sign Up', style: AppTextStyles.bodyText),
+            selected: selectedRoute == AppRouteConstants.signup,
+            onTap: () => onRouteSelected(AppRouteConstants.signup),
           ),
         ],
       ),
