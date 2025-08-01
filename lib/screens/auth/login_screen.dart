@@ -167,10 +167,41 @@ class _LoginScreenState extends State<LoginScreen> {
             CustomContainer(
               padding: EdgeInsets.zero,
               margin: EdgeInsets.zero,
-              child: SizedBox(
+              child: Container(
+                // decoration: BoxDecoration(
+                //   image: DecorationImage(
+                //     image: AssetImage(
+                //       'assets/images/login_bg.jpg',
+                //     ), // Your image path
+                //     fit: BoxFit.cover, // Cover full area
+                //     colorFilter: ColorFilter.mode(
+                //       Colors.white.withOpacity(0.1), // Adjust opacity
+                //       BlendMode.dst, // Or BlendMode.srcOver for overlay effect
+                //     ),
+                //   ),
+                // ),
                 height: MediaQuery.of(context).size.height,
                 width: MediaQuery.of(context).size.width * 0.6,
-                child: Text('Login'),
+                child: Stack(
+                  children: [
+                    Opacity(
+                      opacity: 0.25, // Adjust the transparency
+                      child: Image.asset(
+                        'assets/images/login_bg.jpg',
+                        fit: BoxFit.cover,
+                        width: double.infinity,
+                        height: double.infinity,
+                      ),
+                    ),
+                    // Your content
+                    Center(
+                      child: Text(
+                        'Aap Ki Adalaat, Order Order !',
+                        style: AppTextStyles.documentText,
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
           ],
