@@ -66,17 +66,17 @@ class _SignupScreenState extends State<SignupScreen> {
               ),
             ],
             onSubmit: () async {
-              // if (_formKey.currentState!.validate()) {
-              //   await authProvider.signUp(
-              //     _emailController.text,
-              //     _passwordController.text,
-              //     _fullNameController.text,
-              //     _role,
-              //   );
-              //   if (authProvider.errorMessage == null) {
-              //     Navigator.pop(context); // Return to login
-              //   }
-              // }
+              if (_formKey.currentState!.validate()) {
+                await authProvider.signUp(
+                  _emailController.text,
+                  _passwordController.text,
+                  _fullNameController.text,
+                  _role,
+                );
+                if (authProvider.errorMessage == null) {
+                  Navigator.pop(context); // Return to login
+                }
+              }
             },
           ),
         ),

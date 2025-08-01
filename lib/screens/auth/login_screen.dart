@@ -1,6 +1,9 @@
+import 'package:adalat/constants/services/app_route.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
+import '../../components/pop_up.dart';
 import '../../providers/auth_provider.dart';
 import '../../widgets/form_widgets.dart';
 import '../../widgets/layout_widgets.dart';
@@ -50,24 +53,24 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
             ],
             onSubmit: () async {
-              // if (_formKey.currentState!.validate()) {
-              //   await authProvider.signIn(
-              //     _emailController.text,
-              //     _passwordController.text,
-              //   );
-              //   if (authProvider.errorMessage == null) {
-              //     GoRouter.of(context).go(AppRoutes.dashboard);
-              //   } else {
-              //     if (mounted) {
-              //       CommonPopUp(
-              //         title: 'Login Error',
-              //         message: authProvider.errorMessage!,
-              //         primaryButtonText: 'Try Again',
-              //         onPrimaryPressed: () => Navigator.pop(context),
-              //       );
-              //     }
-              //   }
-              // }
+              if (_formKey.currentState!.validate()) {
+                await authProvider.signIn(
+                  _emailController.text,
+                  _passwordController.text,
+                );
+                if (authProvider.errorMessage == null) {
+                  GoRouter.of(context).go(AppRouteConstants.dashboard);
+                } else {
+                  if (mounted) {
+                    CommonPopUp(
+                      title: 'Login Error',
+                      message: authProvider.errorMessage!,
+                      primaryButtonText: 'Try Again',
+                      onPrimaryPressed: () => Navigator.pop(context),
+                    );
+                  }
+                }
+              }
             },
           ),
         ),
