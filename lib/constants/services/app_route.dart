@@ -3,8 +3,8 @@ import 'package:go_router/go_router.dart';
 import '../../screens/case_details/case_details.dart';
 import '../../screens/cases_screen.dart';
 import '../../screens/dashboard/dashboard_screen.dart';
-import '../../screens/login_screen.dart';
-import '../../screens/signup_screen.dart';
+import '../../screens/auth/login_screen.dart';
+import '../../screens/auth/signup_screen.dart';
 import '../../screens/users/users_screen.dart';
 
 class AppRouteConstants {
