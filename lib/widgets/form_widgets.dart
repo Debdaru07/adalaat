@@ -4,13 +4,15 @@ import 'package:flutter/material.dart';
 
 import '../constants/frontend_components/color_palette.dart';
 import '../constants/frontend_components/text_styles.dart';
-import 'layout_widgets.dart';
 
 class CustomForm extends StatelessWidget {
   final GlobalKey<FormState> formKey;
   final List<Widget> fields;
+  final List<Widget>? footerWidgets;
   final VoidCallback onSubmit;
   final String submitButtonText;
+  final double? buttonHeight;
+  final double? buttonWidth;
 
   const CustomForm({
     super.key,
@@ -18,6 +20,9 @@ class CustomForm extends StatelessWidget {
     required this.fields,
     required this.onSubmit,
     this.submitButtonText = 'Submit',
+    this.buttonHeight,
+    this.buttonWidth,
+    this.footerWidgets,
   });
 
   @override
@@ -29,17 +34,22 @@ class CustomForm extends StatelessWidget {
         children: [
           ...fields,
           SizedBox(height: AppSpacingValues.mediumMargin),
-          ElevatedButton(
-            onPressed: onSubmit,
-            style: ElevatedButton.styleFrom(
-              backgroundColor: AppColors.primaryColor,
-              padding: EdgeInsets.all(AppSpacingValues.buttonPadding),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(8),
+          SizedBox(
+            height: buttonHeight,
+            width: buttonWidth,
+            child: ElevatedButton(
+              onPressed: onSubmit,
+              style: ElevatedButton.styleFrom(
+                backgroundColor: AppColors.primaryColor,
+                padding: EdgeInsets.all(AppSpacingValues.buttonPadding),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8),
+                ),
               ),
+              child: Text(submitButtonText, style: AppTextStyles.buttonText),
             ),
-            child: Text(submitButtonText, style: AppTextStyles.buttonText),
           ),
+          ...footerWidgets!,
         ],
       ),
     );
