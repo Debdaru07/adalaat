@@ -30,6 +30,25 @@
   <link rel="icon" type="image/png" href="favicon.png"/>
 
   <title>adalat</title>
+
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/10.14.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.14.0/firebase-auth.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.14.0/firebase-firestore.js"></script>
+
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyA0ekpOhnuBLiNP6qf2_5aqA7F7o9Ximy0",
+      authDomain: "adalaat-9cbf5.firebaseapp.com",
+      databaseURL: "https://adalaat-9cbf5-default-rtdb.asia-southeast1.firebasedatabase.app",
+      projectId: "adalaat-9cbf5",
+      storageBucket: "adalaat-9cbf5.firebasestorage.app",
+      messagingSenderId: "220713945997",
+      appId: "1:220713945997:web:f8b5bd8e6a874639680bc4",
+      measurementId: "G-3LJXW3CW4M"
+    };
+    firebase.initializeApp(firebaseConfig);
+  </script>
   <link rel="manifest" href="manifest.json">
 </head>
 <body>
