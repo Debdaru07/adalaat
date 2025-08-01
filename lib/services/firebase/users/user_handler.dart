@@ -9,6 +9,9 @@ class UserHandler {
 
   UserHandler(this._networkService);
 
+  // Expose FirebaseAuth instance
+  FirebaseAuth get auth => _networkService.auth;
+
   // Sign up with email, password, and additional user details
   Future<NetworkResponse<User>> signUp({
     required String email,

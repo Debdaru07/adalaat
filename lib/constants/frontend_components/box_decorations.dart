@@ -26,7 +26,30 @@ class AppDecorations {
     borderRadius: BorderRadius.circular(8),
   );
 
-  static InputDecorationTheme inputDecoration = InputDecorationTheme(
+  static InputDecorationTheme inputDecorationTheme = InputDecorationTheme(
+    border: OutlineInputBorder(
+      borderRadius: BorderRadius.circular(8),
+      borderSide: BorderSide(color: AppColors.textColor.withOpacity(0.3)),
+    ),
+    enabledBorder: OutlineInputBorder(
+      borderRadius: BorderRadius.circular(8),
+      borderSide: BorderSide(color: AppColors.textColor.withOpacity(0.3)),
+    ),
+    focusedBorder: OutlineInputBorder(
+      borderRadius: BorderRadius.circular(8),
+      borderSide: BorderSide(color: AppColors.primaryColor, width: 2),
+    ),
+    errorBorder: OutlineInputBorder(
+      borderRadius: BorderRadius.circular(8),
+      borderSide: BorderSide(color: AppColors.errorColor),
+    ),
+    contentPadding: EdgeInsets.symmetric(
+      horizontal: AppSpacingValues.mediumPadding,
+      vertical: AppSpacingValues.smallPadding,
+    ),
+  );
+
+  static InputDecoration inputDecoration = InputDecoration(
     border: OutlineInputBorder(
       borderRadius: BorderRadius.circular(8),
       borderSide: BorderSide(color: AppColors.textColor.withOpacity(0.3)),

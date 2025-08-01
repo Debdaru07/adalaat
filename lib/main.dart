@@ -61,7 +61,7 @@ class AdalatAI extends StatelessWidget {
             ),
           ),
         ),
-        inputDecorationTheme: AppDecorations.inputDecoration,
+        inputDecorationTheme: AppDecorations.inputDecorationTheme,
         cardTheme: CardTheme(
           color: Colors.white,
           elevation: 2,
