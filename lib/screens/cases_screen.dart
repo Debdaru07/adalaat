@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 
-import '../constants/frontend_components/ui_components.dart';
+import '../constants/frontend_components/box_decorations.dart';
+import '../constants/frontend_components/color_palette.dart';
+import '../constants/frontend_components/spacing_values.dart';
+import '../constants/frontend_components/text_styles.dart';
 import '../constants/services/case_status.dart';
 import '../services/firebase/cases/case_handler.dart';
 import '../services/network/network_service.dart';
@@ -13,16 +16,16 @@ class CasesScreen extends StatelessWidget {
     final caseHandler = CaseHandler(NetworkService());
 
     return Scaffold(
-      backgroundColor: UIConstants.backgroundColor,
+      backgroundColor: AppColors.backgroundColor,
       appBar: AppBar(
-        backgroundColor: UIConstants.primaryColor,
+        backgroundColor: AppColors.primaryColor,
         title: Text(
           'Cases',
-          style: UIConstants.headline1.copyWith(color: Colors.white),
+          style: AppTextStyles.headline1.copyWith(color: Colors.white),
         ),
       ),
       body: Padding(
-        padding: const EdgeInsets.all(UIConstants.screenPadding),
+        padding: const EdgeInsets.all(AppSpacingValues.screenPadding),
         child: FutureBuilder<NetworkResponse<List<Map<String, dynamic>>>>(
           future: caseHandler.getAllCases(),
           builder: (context, snapshot) {
@@ -33,8 +36,8 @@ class CasesScreen extends StatelessWidget {
               return Center(
                 child: Text(
                   'Error: ${snapshot.data!.error} (Code: ${snapshot.data!.statusCode})',
-                  style: UIConstants.bodyText.copyWith(
-                    color: UIConstants.errorColor,
+                  style: AppTextStyles.bodyText.copyWith(
+                    color: AppColors.errorColor,
                   ),
                 ),
               );
@@ -46,20 +49,20 @@ class CasesScreen extends StatelessWidget {
                 final caseData = cases[index];
                 return Container(
                   margin: const EdgeInsets.only(
-                    bottom: UIConstants.mediumMargin,
+                    bottom: AppSpacingValues.mediumMargin,
                   ),
-                  decoration: UIConstants.cardDecoration,
+                  decoration: AppDecorations.cardDecoration,
                   child: ListTile(
                     contentPadding: const EdgeInsets.all(
-                      UIConstants.cardPadding,
+                      AppSpacingValues.cardPadding,
                     ),
                     title: Text(
                       caseData['title'],
-                      style: UIConstants.headline2,
+                      style: AppTextStyles.headline2,
                     ),
                     subtitle: Text(
                       caseData['status'],
-                      style: UIConstants.caption,
+                      style: AppTextStyles.caption,
                     ),
                     onTap: () async {
                       final response = await caseHandler.updateCase(
@@ -73,11 +76,11 @@ class CasesScreen extends StatelessWidget {
                               response.state == ApiState.success
                                   ? 'Case updated successfully'
                                   : 'Error: ${response.error}',
-                              style: UIConstants.bodyText.copyWith(
+                              style: AppTextStyles.bodyText.copyWith(
                                 color:
                                     response.state == ApiState.success
-                                        ? UIConstants.successColor
-                                        : UIConstants.errorColor,
+                                        ? AppColors.successColor
+                                        : AppColors.errorColor,
                               ),
                             ),
                           ),
