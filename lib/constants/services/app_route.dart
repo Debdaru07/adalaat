@@ -37,7 +37,7 @@ class AppRouter {
         builder: (context, state) => const CasesScreen(),
       ),
       GoRoute(
-        path: AppRouteConstants.cases,
+        path: AppRouteConstants.caseDetails,
         builder: (context, state) => const CaseDetails(),
       ),
       GoRoute(
