@@ -29,28 +29,30 @@ class CustomForm extends StatelessWidget {
   Widget build(BuildContext context) {
     return Form(
       key: formKey,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          ...fields,
-          SizedBox(height: AppSpacingValues.mediumMargin),
-          SizedBox(
-            height: buttonHeight,
-            width: buttonWidth,
-            child: ElevatedButton(
-              onPressed: onSubmit,
-              style: ElevatedButton.styleFrom(
-                backgroundColor: AppColors.primaryColor,
-                padding: EdgeInsets.all(AppSpacingValues.buttonPadding),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8),
+      child: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            ...fields,
+            SizedBox(height: AppSpacingValues.mediumMargin),
+            SizedBox(
+              height: buttonHeight,
+              width: buttonWidth,
+              child: ElevatedButton(
+                onPressed: onSubmit,
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: AppColors.primaryColor,
+                  padding: EdgeInsets.all(AppSpacingValues.buttonPadding),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8),
+                  ),
                 ),
+                child: Text(submitButtonText, style: AppTextStyles.buttonText),
               ),
-              child: Text(submitButtonText, style: AppTextStyles.buttonText),
             ),
-          ),
-          ...footerWidgets!,
-        ],
+            if (footerWidgets != null) ...footerWidgets!,
+          ],
+        ),
       ),
     );
   }
