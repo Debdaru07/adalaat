@@ -1,3 +1,5 @@
+import 'dart:developer' as console;
+
 import 'package:adalat/constants/frontend_components/spacing_values.dart';
 import 'package:adalat/constants/services/app_route.dart';
 import 'package:flutter/material.dart';
@@ -145,15 +147,26 @@ class _LoginScreenState extends State<LoginScreen> {
                         _emailController.text,
                         _passwordController.text,
                       );
+                      console.log(
+                        'authProvider.errorMessage - ${authProvider.errorMessage}',
+                      );
                       if (authProvider.errorMessage == null) {
+                        CommonPopUp.show(
+                          context,
+                          title: 'Successfully Logged In',
+                          message: authProvider.errorMessage!,
+                          popupType: PopupType.success,
+                        );
                         GoRouter.of(context).go(AppRouteConstants.dashboard);
                       } else {
                         if (mounted) {
-                          CommonPopUp(
+                          CommonPopUp.show(
+                            context,
                             title: 'Login Error',
                             message: authProvider.errorMessage!,
                             primaryButtonText: 'Try Again',
                             onPrimaryPressed: () => Navigator.pop(context),
+                            popupType: PopupType.error,
                           );
                         }
                       }
@@ -167,19 +180,7 @@ class _LoginScreenState extends State<LoginScreen> {
             CustomContainer(
               padding: EdgeInsets.zero,
               margin: EdgeInsets.zero,
-              child: Container(
-                // decoration: BoxDecoration(
-                //   image: DecorationImage(
-                //     image: AssetImage(
-                //       'assets/images/login_bg.jpg',
-                //     ), // Your image path
-                //     fit: BoxFit.cover, // Cover full area
-                //     colorFilter: ColorFilter.mode(
-                //       Colors.white.withOpacity(0.1), // Adjust opacity
-                //       BlendMode.dst, // Or BlendMode.srcOver for overlay effect
-                //     ),
-                //   ),
-                // ),
+              child: SizedBox(
                 height: MediaQuery.of(context).size.height,
                 width: MediaQuery.of(context).size.width * 0.6,
                 child: Stack(

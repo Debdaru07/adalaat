@@ -3,6 +3,9 @@ import 'package:flutter/material.dart';
 import '../constants/frontend_components/color_palette.dart';
 import '../constants/frontend_components/text_styles.dart';
 
+// Enum to define popup types
+enum PopupType { success, error, warning, none }
+
 class CommonPopUp extends StatelessWidget {
   final String title;
   final String message;
@@ -10,6 +13,7 @@ class CommonPopUp extends StatelessWidget {
   final VoidCallback? onPrimaryPressed;
   final String? secondaryButtonText;
   final VoidCallback? onSecondaryPressed;
+  final PopupType popupType;
 
   const CommonPopUp({
     super.key,
@@ -19,12 +23,50 @@ class CommonPopUp extends StatelessWidget {
     this.onPrimaryPressed,
     this.secondaryButtonText,
     this.onSecondaryPressed,
+    this.popupType = PopupType.none,
   });
+
+  // Method to get icon based on popup type
+  IconData? _getIconForType() {
+    switch (popupType) {
+      case PopupType.success:
+        return Icons.check_circle;
+      case PopupType.error:
+        return Icons.error;
+      case PopupType.warning:
+        return Icons.warning;
+      case PopupType.none:
+        return null;
+    }
+  }
+
+  // Method to get color based on popup type
+  Color _getColorForType() {
+    switch (popupType) {
+      case PopupType.success:
+        return Colors.green;
+      case PopupType.error:
+        return Colors.red;
+      case PopupType.warning:
+        return Colors.orange;
+      case PopupType.none:
+        return Colors.transparent;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
+    final icon = _getIconForType();
     return AlertDialog(
-      title: Text(title, style: AppTextStyles.headline2),
+      title: Row(
+        children: [
+          if (icon != null) ...[
+            Icon(icon, color: _getColorForType(), size: 24),
+            const SizedBox(width: 8), // Spacing between icon and title
+          ],
+          Expanded(child: Text(title, style: AppTextStyles.headline2)),
+        ],
+      ),
       content: Text(message, style: AppTextStyles.bodyText),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
       backgroundColor: Colors.white,
@@ -57,6 +99,7 @@ class CommonPopUp extends StatelessWidget {
     VoidCallback? onPrimaryPressed,
     String? secondaryButtonText,
     VoidCallback? onSecondaryPressed,
+    PopupType popupType = PopupType.none,
   }) async {
     await showDialog(
       context: context,
@@ -69,6 +112,7 @@ class CommonPopUp extends StatelessWidget {
             onPrimaryPressed: onPrimaryPressed,
             secondaryButtonText: secondaryButtonText,
             onSecondaryPressed: onSecondaryPressed,
+            popupType: popupType,
           ),
     );
   }

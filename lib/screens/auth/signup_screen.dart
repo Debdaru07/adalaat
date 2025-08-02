@@ -205,19 +205,22 @@ class _SignupScreenState extends State<SignupScreen> {
                         _role.toString().split('.').last,
                       );
                       if (authProvider.errorMessage == null) {
+                        CommonPopUp.show(
+                          context,
+                          title: 'Successfully Signed Up',
+                          message: authProvider.errorMessage!,
+                          popupType: PopupType.success,
+                        );
                         GoRouter.of(context).go(AppRouteConstants.login);
                       } else {
                         if (mounted) {
-                          showDialog(
-                            context: context,
-                            builder:
-                                (context) => CommonPopUp(
-                                  title: 'Signup Error',
-                                  message: authProvider.errorMessage!,
-                                  primaryButtonText: 'Try Again',
-                                  onPrimaryPressed:
-                                      () => Navigator.pop(context),
-                                ),
+                          CommonPopUp.show(
+                            context,
+                            title: 'Signup Error',
+                            message: authProvider.errorMessage!,
+                            primaryButtonText: 'Try Again',
+                            onPrimaryPressed: () => Navigator.pop(context),
+                            popupType: PopupType.error,
                           );
                         }
                       }
